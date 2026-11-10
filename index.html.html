@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مواطن | منصة إعلامية عربية شاملة</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0f172a',
+                            900: '#0b192c',
+                            950: '#060d18'
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d4af37',
+                            700: '#b48f28'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b192c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+
+        /* Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+
+        /* Gold Gradient Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f59e0b, #d4af37, #fef08a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+
+    <!-- TOP HEADER / BRANDING -->
+    <header class="bg-navy-900 text-white border-b-2 border-gold-600 sticky top-0 z-40 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
+                        <span class="text-navy-900 font-extrabold text-2xl">م</span>
+                    </div>
+                    <div>
+                        <a href="#" onclick="showSection('home')" class="text-3xl font-black tracking-wider gold-gradient-text">مَواطِن</a>
+                        <p class="text-xs text-slate-400 font-light">صوت الحقيقة .. ومنصة المواطن</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-reverse space-x-6 text-sm font-semibold">
+                    <button onclick="filterCategory('الكل')" class="hover:text-gold-400 transition-colors py-1 px-3 rounded-lg bg-navy-800/50 hover:bg-navy-800">الرئيسية</button>
+                    <button onclick="filterCategory('سياسة')" class="hover:text-gold-400 transition-colors py-1 px-3 rounded-lg hover:bg-navy-800">سياسة</button>
+                    <button onclick="filterCategory('اقتصاد')" class="hover:text-gold-400 transition-colors py-1 px-3 rounded-lg hover:bg-navy-800">اقتصاد</button>
+                    <button onclick="filterCategory('تكنولوجيا')" class="hover:text-gold-400 transition-colors py-1 px-3 rounded-lg hover:bg-navy-800">تكنولوجيا</button>
+                    <button onclick="filterCategory('ثقافة ومجتمع')" class="hover:text-gold-400 transition-colors py-1 px-3 rounded-lg hover:bg-navy-800">ثقافة ومجتمع</button>
+                </nav>
+
+                <!-- Admin Button & Mobile Menu Toggle -->
+                <div class="flex items-center gap-3">
+                    <button id="adminBtnNav" onclick="toggleAdminPanel()" class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-navy-900 font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span id="adminBtnText">لوحة الإدارة</span>
+                    </button>
+                    
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-navy-950 border-t border-slate-800 px-4 py-3 space-y-2 text-sm">
+            <button onclick="filterCategory('الكل'); toggleMobileMenu()" class="block w-full text-right py-2 px-3 hover:bg-navy-800 rounded">الرئيسية</button>
+            <button onclick="filterCategory('سياسة'); toggleMobileMenu()" class="block w-full text-right py-2 px-3 hover:bg-navy-800 rounded">سياسة</button>
+            <button onclick="filterCategory('اقتصاد'); toggleMobileMenu()" class="block w-full text-right py-2 px-3 hover:bg-navy-800 rounded">اقتصاد</button>
+            <button onclick="filterCategory('تكنولوجيا'); toggleMobileMenu()" class="block w-full text-right py-2 px-3 hover:bg-navy-800 rounded">تكنولوجيا</button>
+            <button onclick="filterCategory('ثقافة ومجتمع'); toggleMobileMenu()" class="block w-full text-right py-2 px-3 hover:bg-navy-800 rounded">ثقافة ومجتمع</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT VIEW -->
+    <main id="mainView" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- 1. HERO CAROUSEL / SLIDER (Top Featured News) -->
+        <section class="relative rounded-2xl overflow-hidden shadow-2xl bg-navy-900 border border-slate-800">
+            <div id="heroSlider" class="relative h-72 sm:h-96 md:h-[420px] overflow-hidden">
+                <!-- Slides will be inserted dynamically -->
+            </div>
+            <!-- Slider Controls -->
+            <button onclick="prevHeroSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-navy-900/70 hover:bg-gold-500 hover:text-navy-900 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all z-10">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button onclick="nextHeroSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-900/70 hover:bg-gold-500 hover:text-navy-900 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all z-10">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <!-- Slider Indicators -->
+            <div id="heroIndicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                <!-- Indicators generated dynamically -->
+            </div>
+        </section>
+
+        <!-- 2. ADVERTISING BANNER SLIDER (Up to 5 Ads) -->
+        <section id="adBannerSection" class="relative bg-slate-200 rounded-xl overflow-hidden shadow-sm border border-slate-300">
+            <div class="text-[10px] bg-slate-300 text-slate-600 px-2 py-0.5 absolute top-0 left-0 z-10 rounded-br">إعلان</div>
+            <a id="adBannerLink" href="#" target="_blank" class="block relative h-28 sm:h-36 md:h-40 w-full overflow-hidden">
+                <img id="adBannerImg" src="" alt="مساحة إعلانية" class="w-full h-full object-cover transition-opacity duration-500">
+            </a>
+            <div id="adIndicators" class="absolute bottom-2 right-4 flex gap-1 z-10">
+                <!-- Ad Indicators -->
+            </div>
+        </section>
+
+        <!-- 3. BREAKING NEWS TICKER BAR -->
+        <section id="tickerSection" class="bg-navy-900 text-white rounded-xl shadow-md border-r-4 border-gold-500 overflow-hidden flex items-center">
+            <div class="bg-gold-500 text-navy-900 font-black px-4 py-3 flex items-center gap-2 shrink-0 z-10 shadow-lg">
+                <i class="fa-solid fa-bolt animate-pulse"></i>
+                <span class="whitespace-nowrap text-xs sm:text-sm">عاجل</span>
+            </div>
+            <div class="overflow-hidden flex-grow relative py-2.5 px-3">
+                <div id="tickerContent" class="animate-ticker text-sm sm:text-base font-semibold text-slate-100">
+                    <!-- Ticker texts will be inserted dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SEARCH AND FILTER BAR -->
+        <section class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <!-- Filter Pills -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto" id="categoryPills">
+                <!-- Category Buttons generated via JS -->
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative w-full md:w-72">
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="ابحث في الأخبار والمقالات..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500 transition-colors">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            </div>
+        </section>
+
+        <!-- 4. NEWS AND ARTICLES GRID -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                <h2 class="text-xl font-bold text-navy-900 border-r-4 border-gold-500 pr-3" id="currentCategoryTitle">آخر الأخبار والتغطيات</h2>
+                <span id="newsCount" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-semibold">0 خبر</span>
+            </div>
+
+            <!-- News Cards Container -->
+            <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic News Cards will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyNewsState" class="hidden text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
+                <i class="fa-regular fa-newspaper text-5xl text-slate-300 mb-3"></i>
+                <p class="text-slate-500 font-semibold">لا توجد أخبار مطابقة لبحثك أو تصنيفك حالياً.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ADMIN PANEL SECTION (Hidden by Default) -->
+    <section id="adminView" class="hidden flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- LOGIN CARD (When Not Logged In) -->
+        <div id="adminLoginForm" class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-slate-200 my-12">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-navy-900 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <i class="fa-solid fa-user-lock text-gold-500 text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-black text-navy-900">تسجيل دخول الإدارة</h2>
+                <p class="text-slate-500 text-sm mt-1">الموقع الإعلامي «مواطن»</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم المستخدم</label>
+                    <input type="text" id="loginUser" required value="admin" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+                    <input type="password" id="loginPass" required value="admin123" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                </div>
+                <div id="loginError" class="hidden text-red-500 text-xs font-semibold text-center"></div>
+                <button type="submit" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-500 font-bold py-2.5 rounded-lg text-sm shadow transition-all">
+                    دخول لوحة التحكم
+                </button>
+            </form>
+            <div class="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-500 border border-slate-200 text-center">
+                بيانات الدخول التجريبية: <span class="font-bold text-navy-900">admin</span> / <span class="font-bold text-navy-900">admin123</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD DASH PANEL (When Logged In) -->
+        <div id="adminDashboard" class="hidden space-y-6">
+            
+            <!-- Dashboard Header -->
+            <div class="bg-navy-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h1 class="text-2xl font-black text-gold-500">لوحة إدارة منصة «مواطن»</h1>
+                    <p class="text-slate-300 text-xs mt-1">إدارة المحتوى والإعلانات والشريط العاجل بسهولة وحفظ تلقائي.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="showSection('home')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
+                        <i class="fa-solid fa-eye ml-1"></i> معاينة الموقع
+                    </button>
+                    <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
+                        <i class="fa-solid fa-right-from-bracket ml-1"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Tabs Navigation -->
+            <div class="flex border-b border-slate-200 bg-white rounded-t-xl px-4 pt-2 gap-2 shadow-sm">
+                <button onclick="switchTab('newsTab')" id="tabBtnNews" class="tab-btn px-4 py-3 font-bold text-sm border-b-2 border-gold-500 text-navy-900">إدارة الأخبار والمقالات</button>
+                <button onclick="switchTab('adsTab')" id="tabBtnAds" class="tab-btn px-4 py-3 font-bold text-sm text-slate-500 hover:text-navy-900">إدارة الإعلانات (5)</button>
+                <button onclick="switchTab('tickerTab')" id="tabBtnTicker" class="tab-btn px-4 py-3 font-bold text-sm text-slate-500 hover:text-navy-900">إدارة الشريط العاجل</button>
+            </div>
+
+            <!-- TAB 1: NEWS MANAGEMENT -->
+            <div id="newsTab" class="tab-content bg-white p-6 rounded-b-xl border border-slate-200 shadow-sm space-y-8">
+                <!-- Add/Edit News Form -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                    <h3 class="font-bold text-navy-900 text-base border-r-4 border-gold-500 pr-2" id="newsFormTitle">إضافة خبر أو مقال جديد</h3>
+                    <form onsubmit="saveNews(event)" class="space-y-4">
+                        <input type="hidden" id="newsId">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الخبر *</label>
+                                <input type="text" id="newsTitle" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">التصنيف *</label>
+                                <select id="newsCategory" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                                    <option value="سياسة">سياسة</option>
+                                    <option value="اقتصاد">اقتصاد</option>
+                                    <option value="تكنولوجيا">تكنولوجيا</option>
+                                    <option value="ثقافة ومجتمع">ثقافة ومجتمع</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رابط الصورة (URL)</label>
+                            <input type="url" id="newsImage" placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">محتوى الخبر / المقال *</label>
+                            <textarea id="newsContent" rows="5" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500"></textarea>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="newsIsHero" class="w-4 h-4 text-gold-500 rounded border-slate-300 focus:ring-gold-500">
+                            <label for="newsIsHero" class="text-xs font-bold text-slate-700">عرض الخبر في الصور المتحركة العلوية (Hero Carousel)</label>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button type="submit" class="bg-navy-900 hover:bg-navy-800 text-gold-500 font-bold px-6 py-2 rounded-lg text-sm shadow">حفظ الخبر</button>
+                            <button type="button" onclick="resetNewsForm()" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-semibold px-4 py-2 rounded-lg text-sm">إلغاء / تفريغ</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing News Table -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-navy-900 text-base">قائمة الأخبار والمقالات المنشورة</h3>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-100 text-navy-900 border-b border-slate-200 font-bold">
+                                <tr>
+                                    <th class="p-3">الصورة</th>
+                                    <th class="p-3">العنوان</th>
+                                    <th class="p-3">التصنيف</th>
+                                    <th class="p-3">التاريخ</th>
+                                    <th class="p-3">في الأعلى؟</th>
+                                    <th class="p-3 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="newsAdminTableBody" class="divide-y divide-slate-200">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ADS MANAGEMENT -->
+            <div id="adsTab" class="tab-content hidden bg-white p-6 rounded-b-xl border border-slate-200 shadow-sm space-y-6">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-navy-900 text-base mb-2">إدارة البانر الإعلاني المتحرك (حتى 5 إعلانات)</h3>
+                    <p class="text-xs text-slate-500">يمكنك رفع روابط الصور ورابط التوجيه لكل إعلان، ويتم عرضها بالتتابع تلقائياً في الصفحة الرئيسية.</p>
+                </div>
+
+                <div id="adsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 5 Ad Slots Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- TAB 3: TICKER MANAGEMENT -->
+            <div id="tickerTab" class="tab-content hidden bg-white p-6 rounded-b-xl border border-slate-200 shadow-sm space-y-6">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-navy-900 text-base">إعدادات شريط الأخبار العاجلة</h3>
+                        <p class="text-xs text-slate-500">التحكم بتشغيل أو إيقاف الشريط وإضافة جمل العاجل.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-slate-700">حالة الشريط:</span>
+                        <button id="tickerToggleBtn" onclick="toggleTickerActive()" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors">
+                            <!-- Toggle Button Text -->
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add Ticker Item Form -->
+                <form onsubmit="addTickerItem(event)" class="flex gap-2">
+                    <input type="text" id="tickerInput" placeholder="اكتب نص الخبر العاجل الجديد هنا..." required class="flex-grow px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-gold-500">
+                    <button type="submit" class="bg-navy-900 hover:bg-navy-800 text-gold-500 font-bold px-5 py-2 rounded-lg text-sm whitespace-nowrap shadow">إضافة خبر عاجل</button>
+                </form>
+
+                <!-- Ticker Items List -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-xs text-slate-700">النصوص الحالية في الشريط:</h4>
+                    <div id="tickerAdminList" class="space-y-2">
+                        <!-- Ticker Items List dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ARTICLE DETAILS MODAL -->
+    <div id="newsModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden border border-slate-200 my-8">
+            <div class="relative h-64 sm:h-80 w-full bg-slate-900">
+                <img id="modalImg" src="" alt="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 left-4 bg-navy-900/80 hover:bg-navy-900 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="absolute bottom-4 right-4 bg-gold-500 text-navy-900 font-bold text-xs px-3 py-1 rounded-full shadow" id="modalCategory"></div>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center text-xs text-slate-400 gap-4 border-b border-slate-100 pb-3">
+                    <span><i class="fa-regular fa-calendar ml-1"></i> <span id="modalDate"></span></span>
+                    <span><i class="fa-regular fa-user ml-1"></i> المحرر: منصة مواطن</span>
+                </div>
+                <h2 id="modalTitle" class="text-2xl font-black text-navy-900 leading-snug"></h2>
+                <div id="modalContent" class="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-line"></div>
+                <div class="pt-4 border-t border-slate-100 flex justify-end">
+                    <button onclick="closeModal()" class="bg-navy-900 text-white text-xs px-5 py-2 rounded-lg font-bold hover:bg-navy-800 transition-colors">إغلاق القرائة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-950 text-slate-400 border-t border-slate-800 mt-12 py-8 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-center">
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gold-500 text-navy-900 font-black flex items-center justify-center text-lg">م</div>
+                <span class="text-xl font-bold text-white tracking-wide">مَواطِن</span>
+            </div>
+            
+            <p class="text-xs text-slate-400 max-w-md mx-auto">منصة إعلامية عربية مستقلة تنقل الخبر بكل أمانة وشفافية على مدار الساعة.</p>
+            
+            <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <div>
+                    تم تطوير الموقع من قبل <span class="text-gold-500 font-bold">حسن الحميدي</span> &copy; جميع الحقوق محفوظة
+                </div>
+                <div>
+                    البريد الإلكتروني: <a href="mailto:alkaser20200hasn@gmail.com" class="text-slate-200 hover:text-gold-400 underline font-mono">alkaser20200hasn@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // DEFAULT INITIAL DATA FOR LOCALSTORAGE
+        const defaultNews = [
+            {
+                id: '1',
+                title: 'قمة اقتصادية عربية موسعة لتزيز الاستثمارات والتكامل الرقمي',
+                category: 'اقتصاد',
+                image: 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9?auto=format&fit=crop&w=1000&q=80',
+                content: 'انطلقت صباح اليوم أعمال القيمة الاقتصادية بمشاركة عدد كبير من رجال الأعمال والمستثمرين، حيث تمت مناقشة استراتيجيات التكامل الرقمي وتعزيز الاستثمارات في البنية التحتية والمشاريع الخضراء المستدامة.',
+                date: '2025-05-10',
+                isHero: true
+            },
+            {
+                id: '2',
+                title: 'إطلاق مبادرة وطنية لتطوير قدرات الذكاء الاصطناعي لدى الشباب',
+                category: 'تكنولوجيا',
+                image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1000&q=80',
+                content: 'أعلنت وزارة التكنولوجيا عن إطلاق برنامج تدريبي مكثف يهدف إلى صقل مهارات الآلاف من الشباب في مجالات البرمجة والذكاء الاصطناعي، لتجهيزهم لسوق العمل المستقبلي.',
+                date: '2025-05-09',
+                isHero: true
+            },
+            {
+                id: '3',
+                title: 'تفاهمات دولية جديدة حول ملفات المناخ والطاقة التجددية',
+                category: 'سياسة',
+                image: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1000&q=80',
+                content: 'شهدت الجلسة الختامية للمؤتمر الدولي للمناخ اتفاقاً بين عدة دول على تخفيض الانبعاثات وزيادة اعتماد مصادر الطاقة الشديدة النظافة بحلول العام القادم.',
+                date: '2025-05-08',
+                isHero: true
+            },
+            {
+                id: '4',
+                title: 'معرض الفنون العربية يفتتح أبوابه للجمهور بمشاركات عالمية',
+                category: 'ثقافة ومجتمع',
+                image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=1000&q=80',
+                content: 'استقبل معرض الفنون الثقافي زواره بحفاوة بالغة، ضاماً لوحات ومجسمات تعكس الأصالة والتطور الفني المعاصر من مختلف البلدان العربية.',
+                date: '2025-05-07',
+                isHero: false
+            }
+        ];
+
+        const defaultAds = [
+            { id: 0, image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80', link: 'https://example.com/ad1' },
+            { id: 1, image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80', link: 'https://example.com/ad2' },
+            { id: 2, image: '', link: '' },
+            { id: 3, image: '', link: '' },
+            { id: 4, image: '', link: '' }
+        ];
+
+        const defaultTicker = {
+            active: true,
+            items: [
+                'عاجل: انطلاق أعمال المؤتمر الإعلامي العربي في العاصمة',
+                'ارتفاع المؤشرات الاقتصادية الرئيسية بنسبة 3.5%',
+                'إطلاق الخدمات الرقمية الجديدة للمواطنين عبر المنصة الموحدة'
+            ]
+        };
+
+        // STATE MANAGEMENT
+        let newsData = [];
+        let adsData = [];
+        let tickerData = { active: true, items: [] };
+        let currentFilter = 'الكل';
+        let searchQuery = '';
+        let isLoggedIn = false;
+
+        // SLIDER INTERVALS & INDEXES
+        let heroSlideIndex = 0;
+        let heroInterval = null;
+        let adSlideIndex = 0;
+        let adInterval = null;
+
+        // INITIALIZATION
+        window.onload = function() {
+            loadLocalStorageData();
+            renderHeroSlider();
+            renderAdBanner();
+            renderTicker();
+            renderCategoryPills();
+            renderNewsGrid();
+            checkAuthStatus();
+        };
+
+        // LOCALSTORAGE HELPERS
+        function loadLocalStorageData() {
+            // Load News
+            const storedNews = localStorage.getItem('mwtn_news');
+            if (storedNews) {
+                newsData = JSON.parse(storedNews);
+            } else {
+                newsData = defaultNews;
+                localStorage.setItem('mwtn_news', JSON.stringify(defaultNews));
+            }
+
+            // Load Ads
+            const storedAds = localStorage.getItem('mwtn_ads');
+            if (storedAds) {
+                adsData = JSON.parse(storedAds);
+            } else {
+                adsData = defaultAds;
+                localStorage.setItem('mwtn_ads', JSON.stringify(defaultAds));
+            }
+
+            // Load Ticker
+            const storedTicker = localStorage.getItem('mwtn_ticker');
+            if (storedTicker) {
+                tickerData = JSON.parse(storedTicker);
+            } else {
+                tickerData = defaultTicker;
+                localStorage.setItem('mwtn_ticker', JSON.stringify(defaultTicker));
+            }
+        }
+
+        function saveNewsState() {
+            localStorage.setItem('mwtn_news', JSON.stringify(newsData));
+            renderHeroSlider();
+            renderNewsGrid();
+            renderAdminNewsTable();
+        }
+
+        function saveAdsState() {
+            localStorage.setItem('mwtn_ads', JSON.stringify(adsData));
+            renderAdBanner();
+            renderAdminAdsList();
+        }
+
+        function saveTickerState() {
+            localStorage.setItem('mwtn_ticker', JSON.stringify(tickerData));
+            renderTicker();
+            renderAdminTickerList();
+        }
+
+        // NAVIGATION & VIEWS
+        function showSection(section) {
+            const mainView = document.getElementById('mainView');
+            const adminView = document.getElementById('adminView');
+
+            if (section === 'home') {
+                mainView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+            } else if (section === 'admin') {
+                mainView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleAdminPanel() {
+            const adminView = document.getElementById('adminView');
+            if (adminView.classList.contains('hidden')) {
+                showSection('admin');
+            } else {
+                showSection('home');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // HERO CAROUSEL LOGIC
+        function renderHeroSlider() {
+            const heroSlider = document.getElementById('heroSlider');
+            const heroIndicators = document.getElementById('heroIndicators');
+            const heroNews = newsData.filter(n => n.isHero);
+
+            if (heroNews.length === 0) {
+                heroSlider.innerHTML = `<div class="w-full h-full flex items-center justify-center text-slate-400 font-bold text-sm">لا توجد أخبار بارزة مضافة للعرض العلوي.</div>`;
+                heroIndicators.innerHTML = '';
+                if (heroInterval) clearInterval(heroInterval);
+                return;
+            }
+
+            if (heroSlideIndex >= heroNews.length) heroSlideIndex = 0;
+
+            let slidesHtml = '';
+            let indicatorsHtml = '';
+
+            heroNews.forEach((item, index) => {
+                const isActive = index === heroSlideIndex;
+                slidesHtml += `
+                    <div class="absolute inset-0 transition-opacity duration-700 ease-in-out ${isActive ? 'opacity-100 z-0' : 'opacity-0 -z-10'}" onclick="openModal('${item.id}')">
+                        <img src="${item.image || 'https://placehold.co/1200x600/0b192c/ffffff?text=مواطن'}" class="w-full h-full object-cover" alt="${item.title}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent flex flex-col justify-end p-6 md:p-8 cursor-pointer">
+                            <span class="bg-gold-500 text-navy-900 font-bold text-xs px-3 py-1 rounded-full w-max mb-2 shadow">${item.category}</span>
+                            <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight hover:text-gold-400 transition-colors">${item.title}</h2>
+                            <p class="text-slate-300 text-xs sm:text-sm mt-2 line-clamp-2 max-w-3xl">${item.content}</p>
+                        </div>
+                    </div>
+                `;
+
+                indicatorsHtml += `
+                    <button onclick="setHeroSlide(${index})" class="w-3 h-3 rounded-full transition-all ${isActive ? 'bg-gold-500 w-8' : 'bg-white/50 hover:bg-white'}"></button>
+                `;
+            });
+
+            heroSlider.innerHTML = slidesHtml;
+            heroIndicators.innerHTML = indicatorsHtml;
+
+            // Reset Interval
+            if (heroInterval) clearInterval(heroInterval);
+            heroInterval = setInterval(() => {
+                nextHeroSlide();
+            }, 6000);
+        }
+
+        function nextHeroSlide() {
+            const heroNews = newsData.filter(n => n.isHero);
+            if (heroNews.length === 0) return;
+            heroSlideIndex = (heroSlideIndex + 1) % heroNews.length;
+            renderHeroSlider();
+        }
+
+        function prevHeroSlide() {
+            const heroNews = newsData.filter(n => n.isHero);
+            if (heroNews.length === 0) return;
+            heroSlideIndex = (heroSlideIndex - 1 + heroNews.length) % heroNews.length;
+            renderHeroSlider();
+        }
+
+        function setHeroSlide(index) {
+            heroSlideIndex = index;
+            renderHeroSlider();
+        }
+
+        // AD BANNER SLIDER LOGIC
+        function renderAdBanner() {
+            const activeAds = adsData.filter(ad => ad.image && ad.image.trim() !== '');
+            const adSection = document.getElementById('adBannerSection');
+            const adImg = document.getElementById('adBannerImg');
+            const adLink = document.getElementById('adBannerLink');
+            const adIndicators = document.getElementById('adIndicators');
+
+            if (activeAds.length === 0) {
+                adSection.classList.add('hidden');
+                if (adInterval) clearInterval(adInterval);
+                return;
+            }
+
+            adSection.classList.remove('hidden');
+            if (adSlideIndex >= activeAds.length) adSlideIndex = 0;
+
+            const currentAd = activeAds[adSlideIndex];
+            adImg.src = currentAd.image;
+            adLink.href = currentAd.link || '#';
+
+            let indicatorsHtml = '';
+            activeAds.forEach((_, index) => {
+                indicatorsHtml += `<span class="inline-block w-2 h-2 rounded-full ${index === adSlideIndex ? 'bg-gold-500' : 'bg-slate-400/50'}"></span>`;
+            });
+            adIndicators.innerHTML = indicatorsHtml;
+
+            if (adInterval) clearInterval(adInterval);
+            if (activeAds.length > 1) {
+                adInterval = setInterval(() => {
+                    adSlideIndex = (adSlideIndex + 1) % activeAds.length;
+                    renderAdBanner();
+                }, 5000);
+            }
+        }
+
+        // TICKER LOGIC
+        function renderTicker() {
+            const tickerSection = document.getElementById('tickerSection');
+            const tickerContent = document.getElementById('tickerContent');
+
+            if (!tickerData.active || tickerData.items.length === 0) {
+                tickerSection.classList.add('hidden');
+                return;
+            }
+
+            tickerSection.classList.remove('hidden');
+            tickerContent.innerHTML = tickerData.items.map(text => `<span class="mx-6">◄ ${text}</span>`).join('');
+        }
+
+        // CATEGORY FILTERS & SEARCH
+        const categories = ['الكل', 'سياسة', 'اقتصاد', 'تكنولوجيا', 'ثقافة ومجتمع'];
+
+        function renderCategoryPills() {
+            const categoryPills = document.getElementById('categoryPills');
+            categoryPills.innerHTML = categories.map(cat => {
+                const isActive = cat === currentFilter;
+                return `
+                    <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-bold transition-all ${isActive ? 'bg-navy-900 text-gold-500 shadow-md' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+                        ${cat}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function filterCategory(cat) {
+            currentFilter = cat;
+            document.getElementById('currentCategoryTitle').innerText = cat === 'الكل' ? 'آخر الأخبار والتغطيات' : `أخبار: ${cat}`;
+            renderCategoryPills();
+            renderNewsGrid();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            renderNewsGrid();
+        }
+
+        // NEWS GRID RENDER
+        function renderNewsGrid() {
+            const newsGrid = document.getElementById('newsGrid');
+            const emptyNewsState = document.getElementById('emptyNewsState');
+            const newsCount = document.getElementById('newsCount');
+
+            let filtered = newsData.filter(item => {
+                const matchesCat = (currentFilter === 'الكل') || (item.category === currentFilter);
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.content.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            newsCount.innerText = `${filtered.length} خبر`;
+
+            if (filtered.length === 0) {
+                newsGrid.innerHTML = '';
+                emptyNewsState.classList.remove('hidden');
+                return;
+            }
+
+            emptyNewsState.classList.add('hidden');
+
+            newsGrid.innerHTML = filtered.map(item => `
+                <article class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="${item.image || 'https://placehold.co/600x400/0b192c/ffffff?text=مواطن'}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 right-3 bg-navy-900/90 text-gold-500 font-bold text-xs px-2.5 py-1 rounded-md shadow">${item.category}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between space-y-3">
+                        <div class="space-y-2">
+                            <span class="text-[11px] text-slate-400 font-semibold block"><i class="fa-regular fa-clock ml-1"></i>${item.date || 'اليوم'}</span>
+                            <h3 class="font-bold text-navy-900 text-base leading-snug group-hover:text-gold-600 transition-colors line-clamp-2">${item.title}</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">${item.content}</p>
+                        </div>
+                        <button onclick="openModal('${item.id}')" class="text-navy-900 font-bold text-xs hover:text-gold-600 inline-flex items-center gap-1 self-start pt-2 border-t border-slate-100 w-full justify-between">
+                            <span>اقرأ التفاصيل الكاملة</span>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // MODAL READ NEWS
+        function openModal(id) {
+            const news = newsData.find(n => n.id === id);
+            if (!news) return;
+
+            document.getElementById('modalTitle').innerText = news.title;
+            document.getElementById('modalCategory').innerText = news.category;
+            document.getElementById('modalDate').innerText = news.date || 'اليوم';
+            document.getElementById('modalContent').innerText = news.content;
+            document.getElementById('modalImg').src = news.image || 'https://placehold.co/800x400/0b192c/ffffff?text=مواطن';
+
+            document.getElementById('newsModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('newsModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // AUTHENTICATION MANAGEMENT
+        function checkAuthStatus() {
+            const authState = localStorage.getItem('mwtn_auth');
+            if (authState === 'true') {
+                isLoggedIn = true;
+                document.getElementById('adminLoginForm').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                document.getElementById('adminBtnText').innerText = 'لوحة التحكم';
+                renderAdminNewsTable();
+                renderAdminAdsList();
+                renderAdminTickerList();
+            } else {
+                isLoggedIn = false;
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+                document.getElementById('adminDashboard').classList.add('hidden');
+                document.getElementById('adminBtnText').innerText = 'لوحة الإدارة';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUser').value;
+            const p = document.getElementById('loginPass').value;
+
+            if (u === 'admin' && p === 'admin123') {
+                localStorage.setItem('mwtn_auth', 'true');
+                document.getElementById('loginError').classList.add('hidden');
+                checkAuthStatus();
+            } else {
+                const err = document.getElementById('loginError');
+                err.innerText = 'خطأ في اسم المستخدم أو كلمة المرور!';
+                err.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('mwtn_auth');
+            checkAuthStatus();
+            showSection('home');
+        }
+
+        // ADMIN TAB NAVIGATION
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-b-2', 'border-gold-500', 'text-navy-900');
+                el.classList.add('text-slate-500');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const btnMap = {
+                'newsTab': 'tabBtnNews',
+                'adsTab': 'tabBtnAds',
+                'tickerTab': 'tabBtnTicker'
+            };
+
+            const activeBtn = document.getElementById(btnMap[tabId]);
+            activeBtn.classList.add('border-b-2', 'border-gold-500', 'text-navy-900');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // ADMIN: NEWS CRUD
+        function renderAdminNewsTable() {
+            const tbody = document.getElementById('newsAdminTableBody');
+            tbody.innerHTML = newsData.map(item => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-3">
+                        <img src="${item.image || 'https://placehold.co/100x100'}" class="w-12 h-10 object-cover rounded">
+                    </td>
+                    <td class="p-3 font-bold text-navy-900 max-w-xs truncate">${item.title}</td>
+                    <td class="p-3"><span class="bg-slate-200 px-2 py-0.5 rounded text-[10px] font-bold">${item.category}</span></td>
+                    <td class="p-3 text-slate-500">${item.date || '-'}</td>
+                    <td class="p-3 font-bold ${item.isHero ? 'text-green-600' : 'text-slate-400'}">${item.isHero ? 'نعم' : 'لا'}</td>
+                    <td class="p-3 text-center space-x-reverse space-x-2">
+                        <button onclick="editNews('${item.id}')" class="text-blue-600 hover:text-blue-800 font-bold bg-blue-50 px-2 py-1 rounded">تعديل</button>
+                        <button onclick="deleteNews('${item.id}')" class="text-red-600 hover:text-red-800 font-bold bg-red-50 px-2 py-1 rounded">حذف</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function saveNews(e) {
+            e.preventDefault();
+            const id = document.getElementById('newsId').value;
+            const title = document.getElementById('newsTitle').value;
+            const category = document.getElementById('newsCategory').value;
+            const image = document.getElementById('newsImage').value;
+            const content = document.getElementById('newsContent').value;
+            const isHero = document.getElementById('newsIsHero').checked;
+
+            if (id) {
+                // Edit existing
+                const index = newsData.findIndex(n => n.id === id);
+                if (index !== -1) {
+                    newsData[index] = { ...newsData[index], title, category, image, content, isHero };
+                }
+            } else {
+                // Add new
+                const newObj = {
+                    id: Date.now().toString(),
+                    title,
+                    category,
+                    image,
+                    content,
+                    isHero,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                newsData.unshift(newObj);
+            }
+
+            saveNewsState();
+            resetNewsForm();
+        }
+
+        function editNews(id) {
+            const item = newsData.find(n => n.id === id);
+            if (!item) return;
+
+            document.getElementById('newsId').value = item.id;
+            document.getElementById('newsTitle').value = item.title;
+            document.getElementById('newsCategory').value = item.category;
+            document.getElementById('newsImage').value = item.image || '';
+            document.getElementById('newsContent').value = item.content;
+            document.getElementById('newsIsHero').checked = !!item.isHero;
+
+            document.getElementById('newsFormTitle').innerText = 'تعديل الخبر الحالي';
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function deleteNews(id) {
+            newsData = newsData.filter(n => n.id !== id);
+            saveNewsState();
+        }
+
+        function resetNewsForm() {
+            document.getElementById('newsId').value = '';
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsImage').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsIsHero').checked = false;
+            document.getElementById('newsFormTitle').innerText = 'إضافة خبر أو مقال جديد';
+        }
+
+        // ADMIN: ADS MANAGEMENT
+        function renderAdminAdsList() {
+            const container = document.getElementById('adsListContainer');
+            let html = '';
+
+            for (let i = 0; i < 5; i++) {
+                const ad = adsData[i] || { id: i, image: '', link: '' };
+                html += `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span class="font-bold text-xs text-navy-900">إعلان رقم ${i + 1}</span>
+                            ${ad.image ? '<span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">مُفعل</span>' : '<span class="text-[10px] bg-slate-200 text-slate-500 px-2 py-0.5 rounded">فارغ</span>'}
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">رابط صورة الإعلان</label>
+                            <input type="url" id="adImg_${i}" value="${ad.image || ''}" placeholder="https://..." class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">رابط التوجيه عند النقر</label>
+                            <input type="url" id="adLink_${i}" value="${ad.link || ''}" placeholder="https://..." class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs">
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="saveSingleAd(${i})" class="bg-navy-900 text-gold-500 text-xs font-bold px-3 py-1 rounded hover:bg-navy-800">حفظ الإعلان</button>
+                            <button onclick="clearSingleAd(${i})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded hover:bg-red-200">حذف</button>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function saveSingleAd(index) {
+            const img = document.getElementById(`adImg_${index}`).value;
+            const link = document.getElementById(`adLink_${index}`).value;
+
+            adsData[index] = { id: index, image: img, link: link };
+            saveAdsState();
+        }
+
+        function clearSingleAd(index) {
+            adsData[index] = { id: index, image: '', link: '' };
+            saveAdsState();
+        }
+
+        // ADMIN: TICKER MANAGEMENT
+        function renderAdminTickerList() {
+            const toggleBtn = document.getElementById('tickerToggleBtn');
+            if (tickerData.active) {
+                toggleBtn.innerText = 'الشريط مفعل (إيقاف)';
+                toggleBtn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-green-600 text-white hover:bg-green-700';
+            } else {
+                toggleBtn.innerText = 'الشريط متوقف (تشغيل)';
+                toggleBtn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition-colors bg-red-600 text-white hover:bg-red-700';
+            }
+
+            const list = document.getElementById('tickerAdminList');
+            list.innerHTML = tickerData.items.map((item, index) => `
+                <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
+                    <span class="font-semibold text-slate-800">◄ ${item}</span>
+                    <button onclick="deleteTickerItem(${index})" class="text-red-600 hover:text-red-800 font-bold bg-red-50 px-2 py-1 rounded">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleTickerActive() {
+            tickerData.active = !tickerData.active;
+            saveTickerState();
+        }
+
+        function addTickerItem(e) {
+            e.preventDefault();
+            const input = document.getElementById('tickerInput');
+            const val = input.value.trim();
+            if (val) {
+                tickerData.items.push(val);
+                input.value = '';
+                saveTickerState();
+            }
+        }
+
+        function deleteTickerItem(index) {
+            tickerData.items.splice(index, 1);
+            saveTickerState();
+        }
+    </script>
+</body>
+</html>
